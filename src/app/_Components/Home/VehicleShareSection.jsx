@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const VehicleShareSection = () => {
   return (
-    <section className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg p-6 md:p-10">
+    <section className="flex flex-col md:flex-row items-center bg-white rounded-lg shadow-lg p-6 md:p-10 px-[2.5%]">
       <div className="md:w-1/2">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">
           Do You Want To Share Your Vehicle?

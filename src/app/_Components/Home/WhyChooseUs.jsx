@@ -1,6 +1,6 @@
 const WhyChooseUs = () => {
   return (
-    <section className="flex flex-col md:flex-row items-center bg-white p-6 md:p-10">
+    <section className="flex flex-col md:flex-row items-center bg-white p-6 md:p-10 px-[2.5%]">
       {/* Left Text Section */}
       <div className="md:w-1/2">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">Why Choose Us</h2>

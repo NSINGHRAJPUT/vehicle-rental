@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white px-[2.5%]">
       <div className="relative max-w-7xl mx-auto flex items-center justify-between py-16 px-6 md:px-12">
         {/* Text Section */}
         <div className="z-10 max-w-lg">

@@ -5,10 +5,12 @@ import BikeRent from "./_Components/Home/BikeRent";
 import VehicleShareSection from "./_Components/Home/VehicleShareSection";
 import WhyChooseUs from "./_Components/Home/WhyChooseUs";
 import Testimonials from "./_Components/Home/Testimonials";
+import Faqs from "./_Components/Home/Faqs";
+import Footer from "./_Components/Home/Footer";
 
 export default function Home() {
   return (
-    <div className="px-[2.5%]">
+    <div className="overflow-x-hidden">
       <Header />
       <Hero />
       <CarRent />
@@ -16,6 +18,8 @@ export default function Home() {
       <VehicleShareSection />
       <WhyChooseUs />
       <Testimonials />
+      <Faqs />
+      <Footer />
     </div>
   );
 }

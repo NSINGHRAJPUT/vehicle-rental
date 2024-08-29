@@ -2,7 +2,7 @@ import TestimonialCard from "./TestimonialCard";
 
 const Testimonials = () => {
   return (
-    <section className="bg-gray-100 py-12">
+    <section className="bg-gray-100 py-12 px-[2.5%]">
       <div className="max-w-6xl mx-auto text-center mb-8">
         <h2 className="text-3xl md:text-4xl font-bold">
           What Our Customer Saying...
