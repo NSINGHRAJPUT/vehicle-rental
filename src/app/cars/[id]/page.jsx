@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Header from "@/app/_Components/Layout/Header";
 import Footer from "@/app/_Components/Layout/Footer";
+import toast from "react-hot-toast";
 
 export default function CarDetailsPage() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function CarDetailsPage() {
   }
 
   const handleBookNow = () => {
-    alert(`Booking car with ID: ${carDetails.id}`);
+    toast.success(`Booking car with ID: ${carDetails.id}`);
   };
 
   return (

@@ -51,7 +51,7 @@ export default function Header() {
               Contact
             </span>
           </Link>
-          <Link href="/signin">
+          <Link href="/login">
             <span className="block py-2 px-4 lg:px-0 text-white hover:text-gray-300">
               Sign In
             </span>
