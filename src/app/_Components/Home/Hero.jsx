@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Hero() {
   return (
@@ -14,12 +15,18 @@ export default function Hero() {
             goals with many extraordinary
           </p>
           <div className="flex space-x-4">
-            <button className="bg-white text-black py-2 px-6 rounded-md font-semibold">
+            <Link
+              href="/cars"
+              className="bg-white text-black py-2 px-6 rounded-md font-semibold"
+            >
               Rent Car
-            </button>
-            <button className="bg-transparent border-2 border-white py-2 px-6 rounded-md font-semibold">
+            </Link>
+            <Link
+              href="/bikes"
+              className="bg-transparent border-2 border-white py-2 px-6 rounded-md font-semibold"
+            >
               Rent Bike
-            </button>
+            </Link>
           </div>
         </div>
 

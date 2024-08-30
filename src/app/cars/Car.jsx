@@ -2,10 +2,12 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function CarProductsClient({ cars }) {
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 20;
+  const router = useRouter();
 
   // Pagination logic
   const indexOfLastCar = currentPage * carsPerPage;
@@ -13,6 +15,14 @@ export default function CarProductsClient({ cars }) {
   const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleViewDetails = (car) => {
+    // Store car data in local storage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedCar", JSON.stringify(car));
+    }
+    router.push(`/cars/${car.id}`);
+  };
 
   return (
     <div>
@@ -53,7 +63,7 @@ export default function CarProductsClient({ cars }) {
             className="border rounded shadow-md p-4 flex flex-col"
           >
             <Image
-              src={`${process.env.NEXT_PUBLIC_API_IMAGE_URL}`}
+              src={car.image}
               alt={`${car.make} ${car.model}`}
               width={400}
               height={300}
@@ -67,9 +77,12 @@ export default function CarProductsClient({ cars }) {
             <p className="text-gray-600">Power: {car.power}</p>
             <p className="text-gray-600">Engine: {car.engine}</p>
             <div className="flex justify-between items-center mt-auto pt-4">
-              <span className="text-lg font-bold">{`$${car.price}/day`}</span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded">
-                Book Now
+              <span className="text-lg font-bold">{`₹${car.price}/day`}</span>
+              <button
+                onClick={() => handleViewDetails(car)}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
+                View Details
               </button>
             </div>
           </div>

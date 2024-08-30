@@ -3,12 +3,14 @@
 import { useState } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
+import { Toaster } from "react-hot-toast";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <header className="bg-black text-white py-4 px-[2.5%]">
+      <Toaster />
       <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
         {/* Logo */}
         <div className="text-2xl font-bold">
@@ -34,19 +36,19 @@ export default function Header() {
             isOpen ? "block" : "hidden"
           } absolute top-1 left-0 w-full lg:relative lg:w-auto lg:flex lg:items-center lg:space-x-8 bg-black lg:bg-transparent z-20`}
         >
-          <Link href="/hosting">
+          <Link href="/bikes">
             <span className="block py-2 px-4 lg:px-0 text-white hover:text-gray-300">
-              Hosting
+              Bikes
+            </span>
+          </Link>
+          <Link href="/cars">
+            <span className="block py-2 px-4 lg:px-0 text-white hover:text-gray-300">
+              Cars
             </span>
           </Link>
           <Link href="/contact">
             <span className="block py-2 px-4 lg:px-0 text-white hover:text-gray-300">
-              Contact Us
-            </span>
-          </Link>
-          <Link href="/account">
-            <span className="block py-2 px-4 lg:px-0 text-white hover:text-gray-300">
-              Account
+              Contact
             </span>
           </Link>
           <Link href="/signin">

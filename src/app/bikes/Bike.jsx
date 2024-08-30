@@ -2,10 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import Header from "../_Components/Layout/Header";
+import Footer from "../_Components/Layout/Footer";
 
 export default function BikeProductsClient({ bikes }) {
   const [currentPage, setCurrentPage] = useState(1);
   const bikesPerPage = 20;
+  const router = useRouter();
 
   // Pagination logic
   const indexOfLastBike = currentPage * bikesPerPage;
@@ -14,8 +18,19 @@ export default function BikeProductsClient({ bikes }) {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleBookNow = (bike) => {
+    // Store bike data in local storage
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedBike", JSON.stringify(bike));
+    }
+    router.push(`/bikes/${bike.id}`);
+  };
+
+  console.log(bikes);
+
   return (
     <div>
+      <Header />
       {/* Hero Section */}
       <div className="relative h-[50vh] bg-[url('/path-to-your-background-image.jpg')] bg-cover bg-center flex items-center justify-center">
         <h1 className="text-5xl font-bold text-white text-center">
@@ -67,8 +82,11 @@ export default function BikeProductsClient({ bikes }) {
             <p className="text-gray-600">Power: {bike.power}</p>
             <p className="text-gray-600">Engine: {bike.engine}</p>
             <div className="flex justify-between items-center mt-auto pt-4">
-              <span className="text-lg font-bold">{`₹${bike.year}/day`}</span>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded">
+              <span className="text-lg font-bold">{`₹${bike.price}/day`}</span>
+              <button
+                onClick={() => handleBookNow(bike)}
+                className="bg-blue-600 text-white px-4 py-2 rounded"
+              >
                 Book Now
               </button>
             </div>
@@ -94,6 +112,7 @@ export default function BikeProductsClient({ bikes }) {
           )
         )}
       </div>
+      <Footer />
     </div>
   );
 }
