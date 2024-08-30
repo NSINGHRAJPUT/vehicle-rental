@@ -1,12 +1,17 @@
 import Hero from "./_Components/Home/Hero";
-import Header from "./_Components/Home/Header";
+import Header from "./_Components/Layout/Header";
 import CarRent from "./_Components/Home/CarRent";
 import BikeRent from "./_Components/Home/BikeRent";
 import VehicleShareSection from "./_Components/Home/VehicleShareSection";
 import WhyChooseUs from "./_Components/Home/WhyChooseUs";
 import Testimonials from "./_Components/Home/Testimonials";
+import Service from "./_Components/Home/Service";
 import Faqs from "./_Components/Home/Faqs";
-import Footer from "./_Components/Home/Footer";
+import Footer from "./_Components/Layout/Footer";
+
+// https://freetestapi.com/api/v1/cars
+// https://api.api-ninjas.com/v1/motorcycles?make=kawasaki&model=ninja
+// X-Api-Key      eQ3dFmcqqUVI1xbS5Vnb1A==38j61iCYJsNuDno3
 
 export default function Home() {
   return (
@@ -18,6 +23,7 @@ export default function Home() {
       <VehicleShareSection />
       <WhyChooseUs />
       <Testimonials />
+      <Service />
       <Faqs />
       <Footer />
     </div>
