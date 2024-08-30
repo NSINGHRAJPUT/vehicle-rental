@@ -1,5 +1,8 @@
-const Bike = require("../../../model/Bike");
+const Bike = require("../../../model/bikeModel");
+const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
+
+connectDB();
 
 // POST - Register a new bike
 export const POST = async (req) => {
