@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function RentBike() {
   return (
@@ -40,9 +41,12 @@ export default function RentBike() {
           with ease.
         </p>
 
-        <button className="bg-black text-white py-2 px-6 rounded-md font-semibold">
+        <Link
+          href={"/bikeonboarding"}
+          className="bg-black text-white py-2 px-6 rounded-md font-semibold"
+        >
           Rent Bike
-        </button>
+        </Link>
       </div>
     </section>
   );

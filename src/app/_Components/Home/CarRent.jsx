@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function RentCar() {
   return (
@@ -27,9 +28,12 @@ export default function RentCar() {
           with ease.
         </p>
 
-        <button className="bg-black text-white py-2 px-6 rounded-md font-semibold">
+        <Link
+          href={"/caronbording"}
+          className="bg-black text-white py-2 px-6 rounded-md font-semibold"
+        >
           Rent Car
-        </button>
+        </Link>
       </div>
 
       {/* Image Section */}
