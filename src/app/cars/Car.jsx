@@ -8,6 +8,7 @@ export default function CarProductsClient({ cars }) {
   const [currentPage, setCurrentPage] = useState(1);
   const carsPerPage = 20;
   const router = useRouter();
+  console.log(cars);
 
   // Pagination logic
   const indexOfLastCar = currentPage * carsPerPage;
@@ -17,7 +18,6 @@ export default function CarProductsClient({ cars }) {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   const handleViewDetails = (car) => {
-    // Store car data in local storage
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedCar", JSON.stringify(car));
     }
@@ -26,13 +26,6 @@ export default function CarProductsClient({ cars }) {
 
   return (
     <div>
-      {/* Hero Section */}
-      <div className="relative h-[50vh] bg-[url('/path-to-your-background-image.jpg')] bg-cover bg-center flex items-center justify-center">
-        <h1 className="text-5xl font-bold text-white text-center">
-          Rent A Car <br /> Rent Your Freedom
-        </h1>
-      </div>
-
       {/* Filters Section */}
       <div className="py-8 px-4 bg-gray-100">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -63,7 +56,7 @@ export default function CarProductsClient({ cars }) {
             className="border rounded shadow-md p-4 flex flex-col"
           >
             <Image
-              src={car.image}
+              src={""}
               alt={`${car.make} ${car.model}`}
               width={400}
               height={300}

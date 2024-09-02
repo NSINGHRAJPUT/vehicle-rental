@@ -6,42 +6,14 @@ const authenticateToken = require("../../../middleware/auth");
 connectDB();
 
 // POST - Register a new bike
-export const POST = async (req) => {
-  try {
-    const user = await authenticateToken(req);
-
-    const bikeData = await req.json();
-
-    // Add user ID to bike data
-    bikeData.user = user._id;
-
-    const newBike = new Bike(bikeData);
-    const savedBike = await newBike.save();
-
-    return NextResponse.json({
-      success: true,
-      message: "Bike registered successfully",
-      bike: savedBike,
-    });
-  } catch (error) {
-    console.error("Error registering bike:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to register bike",
-        error: error.message,
-        stack: error.stack,
-      },
-      { status: 500 }
-    );
-  }
-};
 
 // GET - Retrieve all bikes
 export const GET = async (req) => {
   try {
     // console.log("get request");
-    const bikes = await Bike.find();
+    const user = await authenticateToken(req);
+    // Add user ID to bike data
+    const bikes = await Bike.find({ user: user._id });
     return NextResponse.json({
       success: true,
       bikes,

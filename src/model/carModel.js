@@ -54,12 +54,17 @@ const carSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "vehicleRentUser",
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-const Car = mongoose.model("Car", carSchema);
+const Car = mongoose.models.Car || mongoose.model("Car", carSchema);
 
 module.exports = Car;

@@ -1,13 +1,20 @@
 const Car = require("../../../model/carModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
+const authenticateToken = require("../../../middleware/auth");
 
 connectDB();
 
 // POST - Create a new car
 export const POST = async (req) => {
   try {
+    const user = await authenticateToken(req);
+
     const carData = await req.json();
+
+    // Add user ID to car data
+    carData.user = user._id;
+
     const newCar = new Car(carData);
     const savedCar = await newCar.save();
 

@@ -1,34 +1,34 @@
-const Bike = require("../../../model/bikeModel");
+const Car = require("../../../model/carModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
 const authenticateToken = require("../../../middleware/auth");
 
 connectDB();
 
-// POST - Register a new bike
+// POST - Create a new car
 export const POST = async (req) => {
   try {
     const user = await authenticateToken(req);
 
-    const bikeData = await req.json();
+    const carData = await req.json();
 
-    // Add user ID to bike data
-    bikeData.user = user._id;
+    // Add user ID to car data
+    carData.user = user._id;
 
-    const newBike = new Bike(bikeData);
-    const savedBike = await newBike.save();
+    const newCar = new Car(carData);
+    const savedCar = await newCar.save();
 
     return NextResponse.json({
       success: true,
-      message: "Bike registered successfully",
-      bike: savedBike,
+      message: "Car registered successfully",
+      car: savedCar,
     });
   } catch (error) {
-    console.error("Error registering bike:", error);
+    console.error("Error registering car:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to register bike",
+        message: "Failed to register car",
         error: error.message,
         stack: error.stack,
       },
@@ -37,21 +37,24 @@ export const POST = async (req) => {
   }
 };
 
-// GET - Retrieve all bikes
+// GET - Retrieve all cars
 export const GET = async (req) => {
   try {
-    // console.log("get request");
-    const bikes = await Bike.find();
+    console.log("getrequest");
+    const user = await authenticateToken(req);
+    // Add user ID to car data
+    const cars = await Car.find({ user: user._id });
+    console.log(cars);
     return NextResponse.json({
       success: true,
-      bikes,
+      cars,
     });
   } catch (error) {
-    console.error("Error retrieving bikes:", error);
+    console.error("Error retrieving cars:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to retrieve bikes",
+        message: "Failed to retrieve cars",
         error: error.message,
         stack: error.stack,
       },
@@ -60,20 +63,20 @@ export const GET = async (req) => {
   }
 };
 
-// PUT - Update a bike by ID
+// PUT - Update a car by ID
 export const PUT = async (req) => {
   try {
-    const bikeId = req.url.split("/").pop(); // Extract the bike ID from the URL
+    const carId = req.url.split("/").pop(); // Extract the car ID from the URL
     const updateData = await req.json();
-    const updatedBike = await Bike.findByIdAndUpdate(bikeId, updateData, {
+    const updatedCar = await Car.findByIdAndUpdate(carId, updateData, {
       new: true,
     });
 
-    if (!updatedBike) {
+    if (!updatedCar) {
       return NextResponse.json(
         {
           success: false,
-          message: "Bike not found",
+          message: "Car not found",
         },
         { status: 404 }
       );
@@ -81,15 +84,15 @@ export const PUT = async (req) => {
 
     return NextResponse.json({
       success: true,
-      message: "Bike updated successfully",
-      bike: updatedBike,
+      message: "Car updated successfully",
+      car: updatedCar,
     });
   } catch (error) {
-    console.error("Error updating bike:", error);
+    console.error("Error updating car:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to update bike",
+        message: "Failed to update car",
         error: error.message,
         stack: error.stack,
       },
@@ -98,17 +101,20 @@ export const PUT = async (req) => {
   }
 };
 
-// DELETE - Delete a bike by ID
+// DELETE - Delete a car by ID
 export const DELETE = async (req) => {
   try {
-    const bikeId = req.url.split("/").pop(); // Extract the bike ID from the URL
-    const deletedBike = await Bike.findByIdAndDelete(bikeId);
+    const user = await authenticateToken(req);
+    // Add user ID to car data
+    carData.user = user._id;
+    const carId = req.url.split("/").pop(); // Extract the car ID from the URL
+    const deletedCar = await Car.findByIdAndDelete(carId);
 
-    if (!deletedBike) {
+    if (!deletedCar) {
       return NextResponse.json(
         {
           success: false,
-          message: "Bike not found",
+          message: "Car not found",
         },
         { status: 404 }
       );
@@ -116,14 +122,14 @@ export const DELETE = async (req) => {
 
     return NextResponse.json({
       success: true,
-      message: "Bike deleted successfully",
+      message: "Car deleted successfully",
     });
   } catch (error) {
-    console.error("Error deleting bike:", error);
+    console.error("Error deleting car:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Failed to delete bike",
+        message: "Failed to delete car",
         error: error.message,
         stack: error.stack,
       },

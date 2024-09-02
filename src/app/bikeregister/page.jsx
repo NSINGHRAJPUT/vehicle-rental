@@ -6,9 +6,11 @@ import Header from "@/app/_Components/Layout/Header";
 import Footer from "@/app/_Components/Layout/Footer";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Cookies from "universal-cookie";
 
 export default function NewBikePage() {
   const router = useRouter();
+  const cookies = new Cookies();
   const [formData, setFormData] = useState({
     make: "",
     model: "",
@@ -57,16 +59,17 @@ export default function NewBikePage() {
       const response = await axios.post("/api/bikeregistration", formData, {
         headers: {
           "Content-Type": "application/json",
+          Authorization: cookies.get("token"),
         },
       });
 
       console.log(response);
 
-      if (response.success) {
+      if (response.data.success) {
         toast.success("Bike registered successfully!");
         router.push("/bikes");
       } else {
-        toast.error(`Failed to register bike: ${result.message}`);
+        toast.error(`Failed to register bike: ${response.data.message}`);
       }
     } catch (error) {
       console.error("Error submitting the form:", error);

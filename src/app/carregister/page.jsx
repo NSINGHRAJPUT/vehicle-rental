@@ -5,8 +5,12 @@ import Header from "@/app/_Components/Layout/Header";
 import Footer from "@/app/_Components/Layout/Footer";
 import toast from "react-hot-toast";
 import axios from "axios";
+import Cookies from "universal-cookie";
+import { useRouter } from "next/navigation";
 
 export default function RegisterCarPage() {
+  const router = useRouter();
+  const cookies = new Cookies();
   const [carDetails, setCarDetails] = useState({
     make: "",
     model: "",
@@ -40,13 +44,36 @@ export default function RegisterCarPage() {
     const finalCarDetails = { ...carDetails, features: featuresArray };
 
     try {
-      const response = await axios.post("/api/cars", finalCarDetails, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "/api/carregistration",
+        finalCarDetails,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: cookies.get("token"),
+          },
+        }
+      );
       console.log(response);
-      toast.success("Car Registered");
+      if (response.data.success) {
+        toast.success("Car Registered");
+        setCarDetails({
+          make: "",
+          model: "",
+          year: "",
+          color: "",
+          mileage: "",
+          price: "",
+          fuelType: "",
+          transmission: "",
+          engine: "",
+          horsepower: "",
+          owners: "",
+          features: "",
+          image: "",
+        });
+        router.push("/dashboard");
+      }
     } catch (error) {
       toast.error("server error");
     }

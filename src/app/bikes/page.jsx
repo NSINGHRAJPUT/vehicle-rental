@@ -1,19 +1,18 @@
 import axios from "axios";
 import BikeProductsClient from "./Bike";
+import HeroLayout from "../_Components/Layout/HeroLayout";
+import Header from "../_Components/Layout/Header";
+import Footer from "../_Components/Layout/Footer";
 
 async function fetchBikes() {
-  const apiUrl = process.env.NEXT_PUBLIC_API_BURL;
-  const apiKey = process.env.NEXT_PUBLIC_API_KEY;
-
   try {
-    const response = await axios.get(`${apiUrl}`, {
-      headers: {
-        "X-Api-Key": apiKey,
-      },
-    });
-    return response.data;
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/bikeregistration`
+    );
+    console.log(response);
+    return response.data.bikes;
   } catch (error) {
-    console.error("Error fetching bikes:", error);
+    console.error("Error fetching bikes:", error.message);
     return [];
   }
 }
@@ -21,5 +20,17 @@ async function fetchBikes() {
 export default async function BikeProducts() {
   const bikes = await fetchBikes();
 
-  return <BikeProductsClient bikes={bikes} />;
+  const data = {
+    title1: "Rent A Bike",
+    title2: "Rent Your Freedom",
+  };
+
+  return (
+    <>
+      <Header />
+      <HeroLayout data={data} />
+      <BikeProductsClient bikes={bikes} />
+      <Footer />
+    </>
+  );
 }

@@ -7,6 +7,7 @@ import Header from "../_Components/Layout/Header";
 import Footer from "../_Components/Layout/Footer";
 
 export default function BikeProductsClient({ bikes }) {
+  console.log(bikes);
   const [currentPage, setCurrentPage] = useState(1);
   const bikesPerPage = 20;
   const router = useRouter();
@@ -30,14 +31,6 @@ export default function BikeProductsClient({ bikes }) {
 
   return (
     <div>
-      <Header />
-      {/* Hero Section */}
-      <div className="relative h-[50vh] bg-[url('/path-to-your-background-image.jpg')] bg-cover bg-center flex items-center justify-center">
-        <h1 className="text-5xl font-bold text-white text-center">
-          Rent A Bike <br /> Rent Your Freedom
-        </h1>
-      </div>
-
       {/* Filters Section */}
       <div className="py-8 px-4 bg-gray-100">
         <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row gap-4 justify-between items-center">
@@ -112,7 +105,6 @@ export default function BikeProductsClient({ bikes }) {
           )
         )}
       </div>
-      <Footer />
     </div>
   );
 }

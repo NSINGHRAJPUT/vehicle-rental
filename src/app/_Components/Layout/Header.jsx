@@ -1,17 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { Toaster } from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import Cookies from "universal-cookie";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const router = useRouter();
+  const cookies = new Cookies();
+
+  useEffect(() => {
+    // Check for token in cookies
+    const token = cookies.get("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    // Clear token cookie and redirect to home
+    cookies.remove("token");
+    setIsLoggedIn(false);
+    router.push("/");
+  };
 
   return (
     <header className="bg-black text-white py-4 px-[2.5%] relative">
       <Toaster />
-      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <div className="text-2xl font-bold">
           <Link href="/">
@@ -38,9 +58,10 @@ export default function Header() {
         <nav
           className={`${
             isOpen ? "block" : "hidden"
-          } absolute top-16 left-0 w-full lg:relative lg:w-auto lg:flex lg:items-center lg:space-x-8 bg-black lg:bg-transparent z-20`}
+          } absolute top-full left-0 w-full lg:static lg:block lg:w-auto bg-black lg:bg-transparent z-20 lg:flex lg:items-center`}
         >
-          <div className="lg:hidden flex flex-col items-center">
+          {/* Mobile Links */}
+          <div className="lg:hidden flex flex-col items-center py-4">
             <Link href="/bikes">
               <span
                 className="block py-2 px-4 text-white hover:text-gray-300"
@@ -65,25 +86,36 @@ export default function Header() {
                 Contact
               </span>
             </Link>
-            <Link href="/login">
+            {isLoggedIn ? (
               <span
-                className="block py-2 px-4 text-white hover:text-gray-300"
-                onClick={() => setIsOpen(false)}
+                className="block py-2 px-4 text-white hover:text-gray-300 cursor-pointer"
+                onClick={handleLogout}
               >
-                Sign In
+                Logout
               </span>
-            </Link>
-            <Link href="/signup">
-              <span
-                className="block py-2 px-4 bg-white text-black rounded-md hover:bg-gray-200"
-                onClick={() => setIsOpen(false)}
-              >
-                Sign Up
-              </span>
-            </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <span
+                    className="block py-2 px-4 text-white hover:text-gray-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign In
+                  </span>
+                </Link>
+                <Link href="/signup">
+                  <span
+                    className="block py-2 px-4 bg-white text-black rounded-md hover:bg-gray-200"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Sign Up
+                  </span>
+                </Link>
+              </>
+            )}
           </div>
 
-          {/* For larger screens */}
+          {/* Links for Larger Screens */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             <Link href="/bikes">
               <span className="block py-2 px-4 text-white hover:text-gray-300">
@@ -100,16 +132,27 @@ export default function Header() {
                 Contact
               </span>
             </Link>
-            <Link href="/login">
-              <span className="block py-2 px-4 text-white hover:text-gray-300">
-                Sign In
+            {isLoggedIn ? (
+              <span
+                className="block py-2 px-4 text-white hover:text-gray-300 cursor-pointer"
+                onClick={handleLogout}
+              >
+                Logout
               </span>
-            </Link>
-            <Link href="/signup">
-              <span className="block py-2 px-4 bg-white text-black rounded-md hover:bg-gray-200">
-                Sign Up
-              </span>
-            </Link>
+            ) : (
+              <>
+                <Link href="/login">
+                  <span className="block py-2 px-4 text-white hover:text-gray-300">
+                    Sign In
+                  </span>
+                </Link>
+                <Link href="/signup">
+                  <span className="block py-2 px-4 bg-white text-black rounded-md hover:bg-gray-200">
+                    Sign Up
+                  </span>
+                </Link>
+              </>
+            )}
           </div>
         </nav>
       </div>

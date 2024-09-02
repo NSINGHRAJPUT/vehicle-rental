@@ -35,6 +35,13 @@ const bikeSchema = new mongoose.Schema({
   valves_per_cylinder: { type: String, required: true },
   starter: { type: String, required: true },
   price: { type: Number, required: true }, // Assuming this is the daily rental price
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "vehicleRentUser",
+    required: true,
+  },
 });
 
-module.exports = mongoose.model("Bike", bikeSchema);
+const Bike = mongoose.models.Bike || mongoose.model("Bike", bikeSchema);
+
+module.exports = Bike;
