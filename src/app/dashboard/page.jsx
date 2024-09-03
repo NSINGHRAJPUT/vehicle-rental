@@ -5,12 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaCalendarAlt, FaTag, FaTimesCircle } from "react-icons/fa";
 import Cookies from "universal-cookie";
 import CarProductsClient from "../cars/Car";
 import BikeProductsClient from "../bikes/Bike";
 import Footer from "../_Components/Layout/Footer";
 import Header from "../_Components/Layout/Header";
+import DetailsModel from "./DetailsModel";
+import RentedVehicles from "./RentedVehicles";
+import Profile from "./Profile";
 
 export default function Dashboard() {
   const cookies = new Cookies();
@@ -20,6 +22,8 @@ export default function Dashboard() {
   const [selectedCategory, setSelectedCategory] = useState("dashboard");
   const [selectedCar, setSelectedCar] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [rentedVehicles, setRentedVehicles] = useState([]);
+  const [profile, setProfile] = useState({});
 
   useEffect(() => {
     const token = cookies.get("token");
@@ -54,9 +58,31 @@ export default function Dashboard() {
     }
   };
 
-  const handleLogout = () => {
-    cookies.remove("token");
-    router.push("/login");
+  const fetchRentedVehicles = async () => {
+    try {
+      const response = await axios.get("/api/getRentedVehicles", {
+        headers: {
+          Authorization: cookies.get("token"),
+        },
+      });
+      console.log("response", response.data.vehicles);
+      setRentedVehicles(response.data.vehicles);
+    } catch (error) {
+      console.error("Error fetching rented vehicles:", error);
+    }
+  };
+  const getProfile = async () => {
+    try {
+      const response = await axios.get("/api/login", {
+        headers: {
+          Authorization: cookies.get("token"),
+        },
+      });
+      console.log("response", response);
+      setProfile(response.data.user);
+    } catch (error) {
+      console.error("Error fetching rented vehicles:", error);
+    }
   };
 
   const handleViewDetails = (car) => {
@@ -85,10 +111,6 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error deleting car:", error);
     }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   return (
@@ -139,7 +161,10 @@ export default function Dashboard() {
                       ? "text-gray-900"
                       : "text-gray-500 hover:text-gray-900"
                   }`}
-                  onClick={() => setSelectedCategory("dashboard")}
+                  onClick={() => {
+                    fetchRentedVehicles();
+                    setSelectedCategory("dashboard");
+                  }}
                 >
                   <svg
                     className="mr-3 h-5 w-5 text-gray-400"
@@ -158,7 +183,10 @@ export default function Dashboard() {
                       ? "text-gray-900 font-bold"
                       : "text-gray-500 hover:text-gray-900"
                   }`}
-                  onClick={() => setSelectedCategory("profile")}
+                  onClick={() => {
+                    getProfile();
+                    setSelectedCategory("profile");
+                  }}
                 >
                   <svg
                     className="mr-3 h-5 w-5 text-gray-400"
@@ -170,45 +198,6 @@ export default function Dashboard() {
                     <path d="M9 17a3 3 0 106 0H9z" />
                   </svg>
                   My Profile
-                </Link>
-                <Link
-                  href="#"
-                  className={`flex items-center ${
-                    selectedCategory === "orders"
-                      ? "text-gray-900 font-bold"
-                      : "text-gray-500 hover:text-gray-900"
-                  }`}
-                  onClick={() => setSelectedCategory("orders")}
-                >
-                  <svg
-                    className="mr-3 h-5 w-5 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                  My Order
-                </Link>
-                <Link
-                  href="#"
-                  className={`flex items-center ${
-                    selectedCategory === "insurance"
-                      ? "text-gray-900 font-bold"
-                      : "text-gray-500 hover:text-gray-900"
-                  }`}
-                  onClick={() => setSelectedCategory("insurance")}
-                >
-                  <svg
-                    className="mr-3 h-5 w-5 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path d="M9 11.5V7a4 4 0 118 0v4.5" />
-                    <path d="M5 15.5h14M5 18.5h14" />
-                  </svg>
-                  Insurance & Policy
                 </Link>
                 <Link
                   href="#"
@@ -267,16 +256,22 @@ export default function Dashboard() {
                     ? "My Bikes"
                     : "Dashboard"}
                 </h3>
-                <button
-                  onClick={handleLogout}
-                  className="text-white bg-gray-900 px-4 py-2 rounded-lg"
-                >
-                  Logout
-                </button>
               </div>
 
               {/* Car or Bike List */}
               <div className="grid gap-6">
+                {selectedCategory === "profile" && (
+                  // <ProfileClient profile={profile} />
+                  <Profile profile={profile} />
+                )}
+
+                {selectedCategory === "dashboard" && (
+                  // <Dashboard /> add dashboard details component here
+                  <RentedVehicles
+                    rentedVehicles={rentedVehicles}
+                    handleViewDetails={handleViewDetails}
+                  />
+                )}
                 {selectedCategory === "cars" && (
                   <CarProductsClient cars={cars} />
                 )}
@@ -291,47 +286,10 @@ export default function Dashboard() {
 
         {/* Modal for Car Details */}
         {isModalOpen && selectedCar && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white rounded-lg shadow-lg w-full max-w-lg p-8">
-              <div className="flex justify-between items-center mb-6">
-                <h4 className="text-xl font-bold">Car Details</h4>
-                <button onClick={closeModal}>
-                  <FaTimesCircle className="text-gray-500 text-xl" />
-                </button>
-              </div>
-              <div className="mb-4">
-                <Image
-                  src={selectedCar.image_url}
-                  alt={selectedCar.name}
-                  width={400}
-                  height={300}
-                  objectFit="cover"
-                />
-              </div>
-              <h5 className="text-lg font-bold mb-2">{selectedCar.name}</h5>
-              <p className="text-gray-600 mb-2">
-                <FaTag className="inline-block mr-2" />${selectedCar.price}
-              </p>
-              <p className="text-gray-600 mb-2">
-                <FaCalendarAlt className="inline-block mr-2" />
-                {selectedCar.year}
-              </p>
-              <div className="flex justify-end space-x-4">
-                <button
-                  onClick={handleEditCar}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={handleDeleteCar}
-                  className="bg-red-500 text-white px-4 py-2 rounded-lg"
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </div>
+          <DetailsModel
+            selectedCar={selectedCar}
+            closeModal={() => setIsModalOpen(false)}
+          />
         )}
       </div>
       <Footer />

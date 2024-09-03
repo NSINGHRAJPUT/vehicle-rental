@@ -1,3 +1,4 @@
+const authenticateToken = require("../../../middleware/auth");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -45,14 +46,14 @@ export const POST = async (req) => {
     });
 
     // Send confirmation email
-    const mailOptions = {
-      from: process.env.EMAIL_USERNAME,
-      to: email,
-      subject: "Login Alert",
-      text: `Hi ${user.name},\n\nYou have successfully logged in to your account. If this wasn't you, please contact support immediately.\n\nBest regards,\nYour Company`,
-    };
+    // const mailOptions = {
+    //   from: process.env.EMAIL_USERNAME,
+    //   to: email,
+    //   subject: "Login Alert",
+    //   text: `Hi ${user.name},\n\nYou have successfully logged in to your account. If this wasn't you, please contact support immediately.\n\nBest regards,\nYour Company`,
+    // };
 
-    await transporter.sendMail(mailOptions);
+    // await transporter.sendMail(mailOptions);
 
     return NextResponse.json({
       success: true,
@@ -65,6 +66,37 @@ export const POST = async (req) => {
       {
         success: false,
         message: "Failed to login",
+        error: error.message,
+        stack: error.stack,
+      },
+      { status: 500 }
+    );
+  }
+};
+
+export const GET = async (req) => {
+  try {
+    const user = await authenticateToken(req);
+    if (!user) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "User not found",
+        },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    console.error("Error retrieving user profile:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Failed to retrieve user profile",
         error: error.message,
         stack: error.stack,
       },

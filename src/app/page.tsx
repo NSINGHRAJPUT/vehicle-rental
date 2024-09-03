@@ -9,10 +9,6 @@ import Service from "./_Components/Home/Service";
 import Faqs from "./_Components/Home/Faqs";
 import Footer from "./_Components/Layout/Footer";
 
-// https://freetestapi.com/api/v1/cars
-// https://api.api-ninjas.com/v1/motorcycles?make=kawasaki&model=ninja
-// X-Api-Key      eQ3dFmcqqUVI1xbS5Vnb1A==38j61iCYJsNuDno3
-
 export default function Home() {
   return (
     <div className="overflow-x-hidden">

@@ -1,3 +1,5 @@
+import Rental from "../../../model/rentalModel";
+
 const Car = require("../../../model/carModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
@@ -5,49 +7,35 @@ const authenticateToken = require("../../../middleware/auth");
 
 connectDB();
 
-// POST - Create a new car
-export const POST = async (req) => {
-  try {
-    const user = await authenticateToken(req);
-
-    const carData = await req.json();
-
-    // Add user ID to car data
-    carData.user = user._id;
-
-    const newCar = new Car(carData);
-    const savedCar = await newCar.save();
-
-    return NextResponse.json({
-      success: true,
-      message: "Car registered successfully",
-      car: savedCar,
-    });
-  } catch (error) {
-    console.error("Error registering car:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        message: "Failed to register car",
-        error: error.message,
-        stack: error.stack,
-      },
-      { status: 500 }
-    );
-  }
-};
-
 // GET - Retrieve all cars
 export const GET = async (req) => {
   try {
-    console.log("getrequest");
     const user = await authenticateToken(req);
-    // Add user ID to car data
+
+    // Fetch cars owned by the user
     const cars = await Car.find({ user: user._id });
-    console.log(cars);
+
+    // Separate the cars based on their rental status
+    const carsOnRent = [];
+    const carsNotOnRent = [];
+
+    for (const car of cars) {
+      if (car.rented) {
+        // If the car is rented, find the corresponding rental and populate user data
+        const rental = await Rental.findOne({
+          vehicle: car._id,
+          vehicleType: "Car",
+        }).populate("user");
+        carsOnRent.push({ car, rentalUser: rental ? rental.user : null });
+      } else {
+        carsNotOnRent.push(car);
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      cars,
+      carsOnRent,
+      carsNotOnRent,
     });
   } catch (error) {
     console.error("Error retrieving cars:", error);

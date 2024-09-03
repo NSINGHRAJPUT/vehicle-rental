@@ -13,7 +13,7 @@ export default function CarProductsClient({ cars }) {
   // Pagination logic
   const indexOfLastCar = currentPage * carsPerPage;
   const indexOfFirstCar = indexOfLastCar - carsPerPage;
-  const currentCars = cars.slice(indexOfFirstCar, indexOfLastCar);
+  const currentCars = cars?.slice(indexOfFirstCar, indexOfLastCar);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -50,7 +50,7 @@ export default function CarProductsClient({ cars }) {
 
       {/* Car Cards Section */}
       <div className="max-w-screen-xl mx-auto py-8 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentCars.map((car, index) => (
+        {currentCars?.map((car, index) => (
           <div
             key={index}
             className="border rounded shadow-md p-4 flex flex-col"
@@ -84,7 +84,7 @@ export default function CarProductsClient({ cars }) {
 
       {/* Pagination */}
       <div className="max-w-screen-xl mx-auto py-8 flex justify-center space-x-4">
-        {[...Array(Math.ceil(cars.length / carsPerPage)).keys()].map(
+        {[...Array(Math.ceil(cars?.length / carsPerPage || 1)).keys()].map(
           (number) => (
             <button
               key={number}

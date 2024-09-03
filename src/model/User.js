@@ -11,6 +11,11 @@ try {
     phoneNumber: { type: String, required: true },
     address: { type: String, required: true },
     password: { type: String, required: true },
+    userType: {
+      type: String,
+      required: true,
+      enum: ["Owner", "Renter"], // Define the two types of users
+    },
     createdAt: { type: Date, default: Date.now },
   });
 

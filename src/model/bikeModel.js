@@ -40,6 +40,10 @@ const bikeSchema = new mongoose.Schema({
     ref: "vehicleRentUser",
     required: true,
   },
+  rented: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const Bike = mongoose.models.Bike || mongoose.model("Bike", bikeSchema);

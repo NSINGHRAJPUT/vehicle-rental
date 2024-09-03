@@ -29,7 +29,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-black text-white py-4 px-[2.5%] relative">
+    <header className="bg-black z-50 text-white py-4 px-[2.5%] relative">
       <Toaster />
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}

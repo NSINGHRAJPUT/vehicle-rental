@@ -31,7 +31,7 @@ async function handleSignUp(req) {
 export const POST = async (req) => {
   console.log(req);
   try {
-    const { name, email, phoneNumber, address, hashedPassword } =
+    const { name, email, phoneNumber, address, hashedPassword, userType } =
       await handleSignUp(req);
 
     // Check if the email is already registered
@@ -50,6 +50,7 @@ export const POST = async (req) => {
       phoneNumber,
       address,
       password: hashedPassword,
+      userType,
     });
 
     // Save the user to the database

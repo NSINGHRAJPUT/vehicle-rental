@@ -15,6 +15,7 @@ export default function SignUpPage() {
     phoneNumber: "",
     address: "",
     password: "",
+    userType: "Renter", // Default to "Renter" or you can leave it empty and require user to select
   });
 
   const handleChange = (e) => {
@@ -137,6 +138,26 @@ export default function SignUpPage() {
                 required
                 className="border border-gray-300 p-2 w-full rounded"
               />
+            </div>
+
+            <div className="mb-4">
+              <label
+                htmlFor="userType"
+                className="block text-gray-700 font-medium mb-2"
+              >
+                User Type
+              </label>
+              <select
+                id="userType"
+                name="userType"
+                value={formData.userType}
+                onChange={handleChange}
+                required
+                className="border border-gray-300 p-2 w-full rounded"
+              >
+                <option value="Renter">Renter</option>
+                <option value="Owner">Owner</option>
+              </select>
             </div>
 
             <div className="mb-6">

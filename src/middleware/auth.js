@@ -12,7 +12,7 @@ const authenticateToken = async (req) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await vehicleRentUser.findById(decoded.id);
+    const user = await vehicleRentUser.findById(decoded.id).select("-password");
     if (!user) {
       throw new Error("Invalid token");
     }
