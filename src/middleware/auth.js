@@ -5,7 +5,7 @@ const vehicleRentUser = require("../model/User");
 
 const authenticateToken = async (req) => {
   const token = req.headers.get("authorization");
-
+  console.log("token", token);
   if (!token) {
     throw new Error("Access token is missing");
   }

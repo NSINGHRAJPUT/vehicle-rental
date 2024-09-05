@@ -1,3 +1,5 @@
+import { uploadOnCloudinary } from "../../../middleware/file";
+
 const Bike = require("../../../model/bikeModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
@@ -8,16 +10,59 @@ connectDB();
 // POST - Register a new bike
 export const POST = async (req) => {
   try {
+    // Authenticate the user from the request token
     const user = await authenticateToken(req);
 
-    const bikeData = await req.json();
+    // Parse the incoming form data
+    const formData = await req.formData();
+    const make = formData.get("make");
+    const model = formData.get("model");
+    const year = formData.get("year");
+    const type = formData.get("type");
+    const transmission = formData.get("transmission");
+    const starter = formData.get("starter");
+    const price = formData.get("price");
+    const imageFile = formData.get("image");
 
-    // Add user ID to bike data
-    bikeData.user = user._id;
+    // If an image is provided, process it
+    let imageUrl = "";
+    if (imageFile) {
+      // Convert the image File object to a buffer
+      const buffer = Buffer.from(await imageFile.arrayBuffer());
 
-    const newBike = new Bike(bikeData);
+      // Upload the image buffer to Cloudinary
+      const cloudinaryResponse = await uploadOnCloudinary(buffer);
+
+      // Check if the upload was successful
+      if (!cloudinaryResponse) {
+        return NextResponse.json(
+          { success: false, message: "Failed to upload image" },
+          { status: 500 }
+        );
+      }
+
+      // Set the URL from Cloudinary response
+      imageUrl = cloudinaryResponse.secure_url;
+    }
+
+    // Prepare the bike data with the image URL and user ID
+    const newBikeData = {
+      make,
+      model,
+      year,
+      type,
+      transmission,
+      starter,
+      price,
+      image: imageUrl, // Image URL from Cloudinary
+      user: user._id, // User ID from the authentication token
+    };
+
+    // Create and save the new bike object in the database
+    const newBike = new Bike(newBikeData);
     const savedBike = await newBike.save();
 
+    // Return a success response with the saved bike data
     return NextResponse.json({
       success: true,
       message: "Bike registered successfully",

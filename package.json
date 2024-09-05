@@ -13,6 +13,8 @@
     "axios": "^1.7.5",
     "bcryptjs": "^2.4.3",
     "carousel": "^0.0.3",
+    "cloudinary": "^2.4.0",
+    "cloudinary-build-url": "^0.2.4",
     "dotenv": "^16.4.5",
     "embla-carousel-auto-scroll": "^8.2.0",
     "embla-carousel-react": "^8.2.0",
