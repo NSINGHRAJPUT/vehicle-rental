@@ -1,3 +1,4 @@
+import { uploadOnCloudinary } from "../../../middleware/file";
 const Car = require("../../../model/carModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
@@ -10,11 +11,58 @@ export const POST = async (req) => {
   try {
     const user = await authenticateToken(req);
 
-    const carData = await req.json();
+    const formData = await req.formData();
+    const make = formData.get("make");
+    const model = formData.get("model");
+    const year = formData.get("year");
+    const color = formData.get("color");
+    const mileage = formData.get("mileage");
+    const price = formData.get("price");
+    const fuelType = formData.get("fuelType");
+    const transmission = formData.get("transmission");
+    const engine = formData.get("engine");
+    const horsepower = formData.get("horsepower");
+    const owners = formData.get("owners");
+    const features = formData.get("features");
+    const imageFile = formData.get("image");
 
-    // Add user ID to car data
-    carData.user = user._id;
+    // If an image is provided, process it
+    let imageUrl = "";
+    if (imageFile) {
+      // Convert the image File object to a buffer
+      const buffer = Buffer.from(await imageFile.arrayBuffer());
+      // Upload the image buffer to Cloudinary
+      const cloudinaryResponse = await uploadOnCloudinary(buffer);
+      // Check if the upload was successful
+      if (!cloudinaryResponse) {
+        return NextResponse.json(
+          { success: false, message: "Failed to upload image" },
+          { status: 500 }
+        );
+      }
 
+      imageUrl = cloudinaryResponse.secure_url;
+    }
+
+    // Create car data
+    const carData = {
+      make,
+      model,
+      year,
+      color,
+      mileage,
+      price,
+      fuelType,
+      transmission,
+      engine,
+      horsepower,
+      owners,
+      features,
+      image: imageUrl,
+      user: user._id,
+    };
+
+    // Save the car to the database
     const newCar = new Car(carData);
     const savedCar = await newCar.save();
 

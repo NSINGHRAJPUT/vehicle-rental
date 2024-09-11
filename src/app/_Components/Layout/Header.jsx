@@ -62,6 +62,14 @@ export default function Header() {
         >
           {/* Mobile Links */}
           <div className="lg:hidden flex flex-col items-center py-4">
+            <Link href="/dashboard">
+              <span
+                className="block py-2 px-4 text-white hover:text-gray-300"
+                onClick={() => setIsOpen(false)}
+              >
+                Dashboard
+              </span>
+            </Link>
             <Link href="/bikes">
               <span
                 className="block py-2 px-4 text-white hover:text-gray-300"
@@ -117,6 +125,11 @@ export default function Header() {
 
           {/* Links for Larger Screens */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
+            <Link href="/dashboard">
+              <span className="block py-2 px-4 text-white hover:text-gray-300">
+                Dashboard
+              </span>
+            </Link>
             <Link href="/bikes">
               <span className="block py-2 px-4 text-white hover:text-gray-300">
                 Bikes

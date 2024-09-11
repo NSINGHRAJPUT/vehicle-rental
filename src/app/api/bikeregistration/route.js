@@ -1,5 +1,4 @@
 import { uploadOnCloudinary } from "../../../middleware/file";
-
 const Bike = require("../../../model/bikeModel");
 const connectDB = require("../../../dbConfig/db");
 const { NextResponse } = require("next/server");
@@ -29,10 +28,8 @@ export const POST = async (req) => {
     if (imageFile) {
       // Convert the image File object to a buffer
       const buffer = Buffer.from(await imageFile.arrayBuffer());
-
       // Upload the image buffer to Cloudinary
       const cloudinaryResponse = await uploadOnCloudinary(buffer);
-
       // Check if the upload was successful
       if (!cloudinaryResponse) {
         return NextResponse.json(
@@ -41,9 +38,10 @@ export const POST = async (req) => {
         );
       }
 
-      // Set the URL from Cloudinary response
       imageUrl = cloudinaryResponse.secure_url;
     }
+
+    console.log("User:", imageUrl);
 
     // Prepare the bike data with the image URL and user ID
     const newBikeData = {

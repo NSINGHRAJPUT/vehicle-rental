@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Header from "@/app/_Components/Layout/Header";
 import Footer from "@/app/_Components/Layout/Footer";
@@ -21,6 +21,15 @@ export default function NewBikePage() {
     price: "",
     image: null,
   });
+
+  const token = cookies.get("token");
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+  }, [token]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -64,7 +73,7 @@ export default function NewBikePage() {
 
       if (response.data.success) {
         toast.success("Bike registered successfully!");
-        router.push("/bikes");
+        // router.push("/bikes");
       } else {
         toast.error(`Failed to register bike: ${response.data.message}`);
       }

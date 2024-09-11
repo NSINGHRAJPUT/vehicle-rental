@@ -3,31 +3,55 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Header from "../_Components/Layout/Header";
-import Footer from "../_Components/Layout/Footer";
 
 export default function BikeProductsClient({ bikes }) {
-  console.log(bikes);
   const [currentPage, setCurrentPage] = useState(1);
-  const bikesPerPage = 20;
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortOption, setSortOption] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const bikesPerPage = 10;
   const router = useRouter();
 
   // Pagination logic
   const indexOfLastBike = currentPage * bikesPerPage;
   const indexOfFirstBike = indexOfLastBike - bikesPerPage;
-  const currentBikes = bikes.slice(indexOfFirstBike, indexOfLastBike);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // Handle sorting logic
+  const sortBikes = (bikeList) => {
+    if (sortOption === "Low to High") {
+      return bikeList.sort((a, b) => a.price - b.price);
+    } else if (sortOption === "High to Low") {
+      return bikeList.sort((a, b) => b.price - a.price);
+    }
+    return bikeList;
+  };
 
+  // Handle filtering by brand and search
+  const filteredBikes = bikes
+    .filter((bike) => {
+      const matchesBrand =
+        selectedBrand === "" ||
+        bike.make.toLowerCase() === selectedBrand.toLowerCase();
+      const matchesSearch =
+        searchTerm === "" ||
+        `${bike.make} ${bike.model}`
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase());
+      return matchesBrand && matchesSearch;
+    })
+    .slice(indexOfFirstBike, indexOfLastBike);
+
+  // Handle booking button click
   const handleBookNow = (bike) => {
-    // Store bike data in local storage
+    console.log(bike);
     if (typeof window !== "undefined") {
       localStorage.setItem("selectedBike", JSON.stringify(bike));
     }
     router.push(`/bikes/${bike.id}`);
   };
 
-  console.log(bikes);
+  // Pagination function
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -38,30 +62,52 @@ export default function BikeProductsClient({ bikes }) {
             type="text"
             placeholder="Search by name..."
             className="border p-2 rounded w-full md:w-1/3"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <select className="border p-2 rounded w-full md:w-1/3">
-            <option>Sort by Price</option>
-            <option>Low to High</option>
-            <option>High to Low</option>
+          <select
+            className="border p-2 rounded w-full md:w-1/3"
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+          >
+            <option value="">Sort by Price</option>
+            <option value="Low to High">Low to High</option>
+            <option value="High to Low">High to Low</option>
           </select>
-          <select className="border p-2 rounded w-full md:w-1/3">
-            <option>Filter by Brand</option>
-            <option>Kawasaki</option>
-            <option>Yamaha</option>
-            <option>Honda</option>
+          <select
+            className="border p-2 rounded w-full md:w-1/3"
+            value={selectedBrand}
+            onChange={(e) => setSelectedBrand(e.target.value)}
+          >
+            <option value="">Filter by Brand</option>
+            <option value="Kawasaki">Kawasaki</option>
+            <option value="Yamaha">Yamaha</option>
+            <option value="Honda">Honda</option>
+            <option value="Royal Enfield">Royal Enfield</option>
+            <option value="Jawa">Jawa</option>
+            <option value="BMW">BMW</option>
           </select>
         </div>
       </div>
 
       {/* Bike Cards Section */}
       <div className="max-w-screen-xl mx-auto py-8 px-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {currentBikes.map((bike, index) => (
+        {sortBikes(filteredBikes).map((bike, index) => (
           <div
             key={index}
-            className="border rounded shadow-md p-4 flex flex-col"
+            className="relative border rounded shadow-md p-4 flex flex-col"
           >
+            {/* Status Badge */}
+            <div
+              className={`absolute top-2 right-2 px-2 py-1 rounded text-white text-xs font-bold ${
+                bike.rented ? "bg-red-500" : "bg-green-500"
+              }`}
+            >
+              {bike.rented ? "Rented" : "Available"}
+            </div>
+
             <Image
-              src={`${process.env.NEXT_PUBLIC_API_IMAGE_URL}`}
+              src={`${bike.image}`}
               alt={`${bike.make} ${bike.model}`}
               width={400}
               height={300}
@@ -72,13 +118,13 @@ export default function BikeProductsClient({ bikes }) {
             </h2>
             <p className="text-gray-600">Year: {bike.year}</p>
             <p className="text-gray-600">Type: {bike.type}</p>
-            <p className="text-gray-600">Power: {bike.power}</p>
-            <p className="text-gray-600">Engine: {bike.engine}</p>
+            <p className="text-gray-600">Transmission: {bike.transmission}</p>
+            <p className="text-gray-600">Model: {bike.model}</p>
             <div className="flex justify-between items-center mt-auto pt-4">
               <span className="text-lg font-bold">{`₹${bike.price}/day`}</span>
               <button
                 onClick={() => handleBookNow(bike)}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
+                className="bg-gray-800 text-white px-4 py-2 rounded"
               >
                 Book Now
               </button>
@@ -96,7 +142,7 @@ export default function BikeProductsClient({ bikes }) {
               onClick={() => paginate(number + 1)}
               className={`px-4 py-2 rounded ${
                 currentPage === number + 1
-                  ? "bg-blue-600 text-white"
+                  ? "bg-gray-600 text-white"
                   : "bg-gray-200"
               }`}
             >

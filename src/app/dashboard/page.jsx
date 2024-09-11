@@ -39,7 +39,8 @@ export default function Dashboard() {
           Authorization: cookies.get("token"),
         },
       });
-      setCars(response.data.cars);
+      console.log(response);
+      setCars(response.data.carsNotOnRent);
     } catch (error) {
       console.error("Error fetching cars:");
     }
@@ -71,6 +72,11 @@ export default function Dashboard() {
       console.error("Error fetching rented vehicles:", error);
     }
   };
+
+  useEffect(() => {
+    fetchRentedVehicles();
+  }, []);
+
   const getProfile = async () => {
     try {
       const response = await axios.get("/api/login", {

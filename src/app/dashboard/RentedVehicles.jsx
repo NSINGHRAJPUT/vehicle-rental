@@ -19,7 +19,7 @@ const RentedVehicles = ({ rentedVehicles }) => {
           </thead>
           <tbody>
             {rentedVehicles.map((order) => (
-              <tr key={order._id}>
+              <tr key={order.id}>
                 <td>#{order.bookingNumber}</td>
                 <td>{`${order.make} ${order.model}`}</td>
                 <td>{order.pickUpLocation || "Location N/A"}</td>

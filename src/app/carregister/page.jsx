@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "@/app/_Components/Layout/Header";
 import Footer from "@/app/_Components/Layout/Footer";
 import toast from "react-hot-toast";
@@ -24,8 +24,17 @@ export default function RegisterCarPage() {
     horsepower: "",
     owners: "",
     features: "",
-    image: "",
+    image: null,
   });
+
+  const token = cookies.get("token");
+
+  useEffect(() => {
+    if (!token) {
+      router.push("/login");
+      return;
+    }
+  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,40 +52,67 @@ export default function RegisterCarPage() {
       .map((feature) => feature.trim());
     const finalCarDetails = { ...carDetails, features: featuresArray };
 
+    const formDataToSend = new FormData();
+    formDataToSend.append("make", finalCarDetails.make);
+    formDataToSend.append("model", finalCarDetails.model);
+    formDataToSend.append("year", finalCarDetails.year);
+    formDataToSend.append("color", finalCarDetails.color);
+    formDataToSend.append("mileage", finalCarDetails.mileage);
+    formDataToSend.append("price", finalCarDetails.price);
+    formDataToSend.append("fuelType", finalCarDetails.fuelType);
+    formDataToSend.append("transmission", finalCarDetails.transmission);
+    formDataToSend.append("engine", finalCarDetails.engine);
+    formDataToSend.append("horsepower", finalCarDetails.horsepower);
+    formDataToSend.append("owners", finalCarDetails.owners);
+    formDataToSend.append("features", finalCarDetails.features);
+    if (carDetails.image) {
+      formDataToSend.append("image", finalCarDetails.image);
+    }
+
+    console.log(formDataToSend);
+
     try {
       const response = await axios.post(
         "/api/carregistration",
-        finalCarDetails,
+        formDataToSend,
         {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
             Authorization: cookies.get("token"),
           },
         }
       );
       console.log(response);
-      if (response.data.success) {
-        toast.success("Car Registered");
-        setCarDetails({
-          make: "",
-          model: "",
-          year: "",
-          color: "",
-          mileage: "",
-          price: "",
-          fuelType: "",
-          transmission: "",
-          engine: "",
-          horsepower: "",
-          owners: "",
-          features: "",
-          image: "",
-        });
-        router.push("/dashboard");
-      }
+      toast.success("Car Registered");
+      // if (response.data.success) {
+      //   toast.success("Car Registered");
+      //   setCarDetails({
+      //     make: "",
+      //     model: "",
+      //     year: "",
+      //     color: "",
+      //     mileage: "",
+      //     price: "",
+      //     fuelType: "",
+      //     transmission: "",
+      //     engine: "",
+      //     horsepower: "",
+      //     owners: "",
+      //     features: "",
+      //     image: "",
+      //   });
+      //   // router.push("/dashboard");
+      // }
     } catch (error) {
       toast.error("server error");
     }
+  };
+
+  const handleFileChange = (e) => {
+    setCarDetails({
+      ...carDetails,
+      image: e.target.files[0], // Properly capturing the selected file
+    });
   };
 
   return (
@@ -237,10 +273,9 @@ export default function RegisterCarPage() {
               <div className="md:col-span-2">
                 <label className="block text-gray-700">Image URL</label>
                 <input
-                  type="text"
+                  type="file"
                   name="image"
-                  value={carDetails.image}
-                  onChange={handleChange}
+                  onChange={handleFileChange}
                   className="w-full p-2 border rounded"
                   placeholder="e.g., https://example.com/car.jpg"
                   required

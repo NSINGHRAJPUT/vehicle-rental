@@ -26,6 +26,7 @@ export default function CarDetailsPage() {
 
     if (storedCar) {
       setCarDetails(JSON.parse(storedCar));
+      console.log(carDetails);
     } else {
       // Redirect to car list page if no car is found
       router.push("/cars");
