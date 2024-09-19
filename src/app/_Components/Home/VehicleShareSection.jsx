@@ -1,4 +1,5 @@
 import Image from "next/image";
+import v1 from "../../../assets/3.jpg";
 
 const VehicleShareSection = () => {
   return (
@@ -20,7 +21,7 @@ const VehicleShareSection = () => {
       </div>
       <div className="md:w-1/2 mt-6 md:mt-0 md:ml-8">
         <Image
-          src="/car-image.jpg" // Replace with your image path
+          src={v1} // Replace with your image path
           alt="Vehicle sharing"
           width={600}
           height={400}

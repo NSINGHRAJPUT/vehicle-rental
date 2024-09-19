@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import carimg from "../../../assets/car.png";
+import bikeimg from "../../../assets/bike.png";
 
 export default function Hero() {
   return (
@@ -31,10 +33,10 @@ export default function Hero() {
         </div>
 
         {/* Image Section */}
-        <div className="absolute inset-0 flex items-center justify-end opacity-50 md:opacity-100">
-          <div className="relative w-full max-w-2xl h-72 md:h-96">
+        <div className="absolute right-0 inset-0 flex items-center justify-end opacity-50 md:opacity-100">
+          <div className="relative left-[50%] -top-[20%] w-full max-w-2xl h-72 md:h-96">
             <Image
-              src="/car-image.png" // Replace with your actual car image path
+              src={carimg} // Replace with your actual car image path
               alt="Car"
               layout="fill"
               objectFit="contain"
@@ -42,7 +44,7 @@ export default function Hero() {
           </div>
           <div className="relative w-full max-w-xs h-48 md:h-64">
             <Image
-              src="/bike-image.png" // Replace with your actual bike image path
+              src={bikeimg} // Replace with your actual bike image path
               alt="Bike"
               layout="fill"
               objectFit="contain"

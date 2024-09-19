@@ -9,6 +9,7 @@ import {
   usePrevNextButtons,
 } from "./ServiceSliderButtons";
 import styles from "./Embla.module.css";
+import Image from "next/image";
 
 const EmblaCarousel = (props) => {
   const { slides, options } = props;
@@ -65,10 +66,16 @@ const EmblaCarousel = (props) => {
     <div className={styles.embla}>
       <div className={styles.embla__viewport} ref={emblaRef}>
         <div className={styles.embla__container}>
-          {slides.map((index) => (
+          {slides.map((img, index) => (
             <div className={styles.embla_slide} key={index}>
               <div className={styles.embla__slide__number}>
-                <span>{index + 1}</span>
+                <Image
+                  src={img}
+                  alt="car"
+                  layout="contain"
+                  objectFit="cover"
+                  className="rounded-full h-full w-full"
+                />
               </div>
             </div>
           ))}

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import c1 from "../../../assets/1.jpg";
 
 export default function RentCar() {
   return (
@@ -40,9 +41,9 @@ export default function RentCar() {
       <div className="lg:w-1/2 flex justify-center lg:justify-end">
         <div className="w-full max-w-md h-64 md:h-80 lg:h-96">
           <Image
-            src="/car-image-2.png" // Replace with your actual image path
+            src={c1} // Replace with your actual image path
             alt="Rent a Car"
-            layout="fill"
+            // layout="fill"
             objectFit="cover"
             className="rounded-md"
           />
