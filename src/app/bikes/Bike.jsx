@@ -11,7 +11,8 @@ export default function BikeProductsClient({ bikes }) {
   const [selectedBrand, setSelectedBrand] = useState("");
   const bikesPerPage = 10;
   const router = useRouter();
-
+  
+console.log(bikes)
   // Pagination logic
   const indexOfLastBike = currentPage * bikesPerPage;
   const indexOfFirstBike = indexOfLastBike - bikesPerPage;
